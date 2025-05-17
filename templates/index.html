@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chatbot UI</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Document Chatbot</h1>
+
+        <form id="uploadForm">
+            <label>Select PDF:</label>
+            <input type="file" name="file" accept=".pdf" required>
+            <button type="submit">Upload</button>
+        </form>
+
+        <form id="askForm" style="margin-top: 20px;">
+            <label>Ask a Question:</label>
+            <input type="text" name="question" required placeholder="e.g., What is the return policy?">
+            <button type="submit">Ask</button>
+        </form>
+
+        <div id="response"></div>
+    </div>
+
+    <script>
+        document.getElementById("uploadForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const response = await fetch("/upload/", { method: "POST", body: formData });
+            const result = await response.json();
+            document.getElementById("response").innerText = result.message || result.error;
+        });
+
+        document.getElementById("askForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const response = await fetch("/ask/", { method: "POST", body: formData });
+            const result = await response.json();
+            document.getElementById("response").innerText = result.answer || result.error;
+        });
+    </script>
+</body>
+</html>
